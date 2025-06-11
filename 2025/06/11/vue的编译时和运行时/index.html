@@ -11,7 +11,7 @@
   
   <title>
     
-      v-show和v-if有什么区别？使用场景分别是什么？ 
+      vue的编译时和运行时是什么意思？ 
       
       
     
@@ -118,44 +118,18 @@
     Jun 11, 2025
   </h3>
   <h1>
-    v-show和v-if有什么区别？使用场景分别是什么？
+    vue的编译时和运行时是什么意思？
   </h1>
   <div class="content markdown-body">
-    <h1 id="v-show和v-if有什么区别？使用场景分别是什么？"><a href="#v-show和v-if有什么区别？使用场景分别是什么？" class="headerlink" title="v-show和v-if有什么区别？使用场景分别是什么？"></a>v-show和v-if有什么区别？使用场景分别是什么？</h1><p>用v-if的话，不满足条件的时候，根本就不会渲染，页面上没有这个dom了</p>
-<p>v-show的话，不管条件是否满足都会渲染，只不过，如果不满足，回家一个样式diaplay：none</p>
-<p>如果是频繁切换的场景下，用v-show会好一点，因为不需要一直走创建，销毁的这个过程</p>
-<ol>
-<li>控制手段不一样， v-show，即使条件是false的情况下，也会进行渲染，只不过会加上一个样式，display:none; v-if的话，如果为false， 就不会进行渲染了</li>
-<li>编译过程， v-if下的组件，会完整的走过整个组件的生命周期，比如根据条件 true或者false，会完整的再走一次 生命周期</li>
-<li>性能方面， v-if在初始化渲染的时候，会根据条件判断是否为渲染，属于懒加载，但是不足的点是，在频繁切换到场景下面，性能不佳，但是v-show是会在初始的时候不管是否需要都会进行渲染，但是在频繁切换的场景，会好一点，因为只是样式进行控制的</li>
-</ol>
-<p>可以先看下面的例子，再去理解上面的话</p>
-<p>例子：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">div</span> <span class="attr">v-if</span>=<span class="string">&#x27;isShowUser&#x27;</span>&gt;</span> 小明 <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">div</span> <span class="attr">v-else</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">el-button</span> @<span class="attr">click</span>=<span class="string">&#x27;handleToggle&#x27;</span>&gt;</span>切换<span class="tag">&lt;/<span class="name">el-button</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="language-javascript">	<span class="title function_">data</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">		<span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="language-javascript">			<span class="attr">isShowUser</span>: <span class="literal">true</span></span></span><br><span class="line"><span class="language-javascript">		&#125;</span></span><br><span class="line"><span class="language-javascript">	&#125;,</span></span><br><span class="line"><span class="language-javascript">	<span class="attr">methods</span>:&#123;</span></span><br><span class="line"><span class="language-javascript">		<span class="title function_">handleToggle</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">			<span class="variable language_">this</span>.<span class="property">isShowUser</span> = <span class="literal">false</span></span></span><br><span class="line"><span class="language-javascript">		&#125;</span></span><br><span class="line"><span class="language-javascript">	&#125;</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>这时候data中的isShowUser的值为true，所以在模版中会显示<div v-if='isShowUser'> 小明 </div>，不会显示<div v-else></div>；</p>
-<ol>
-<li>为什么说是性能优化？在不频繁切换的场景下<ol>
-<li>因为初次渲染的时候，如果不满足条件的话，<div v-else></div>根本就不会进行渲染，这样的话，页面上的dom就会很少，这里的例子只是一个纯dom，如果是一个组件呢，vue实例化一个组件，要进行很多初始化的操作，甚至有可能会发很多的请求，这样就避免了很多无用的操作（因为v-if不会渲染，所以就避免了很多多余的操作）</li>
-<li>v-show的话就是，不管你是一个普通的dom节点还是一个正常的组件，即使是false， 你还是会正常的实例化，初始化； 不同的就是 ，如果你是一个false的值，最终会在dom节点上添加一个样式为display：none而已， 因为就算是组件，最终也是要渲染为哦页面上的dom的</li>
-</ol>
-</li>
-<li>编译过程不同，如果不好理解，你就认为是  作用不同 就可以了<ol>
-<li>加入说现在点击了handleToggle方法，isShowUser 变为了 false， v-show的作用是 将    <div v-if='isShowUser'> 小明 </div>添加一个样式为 diaplay：none， <div v-else></div>则去掉样式diaplay：none，需要显示出来了，这是一个普通的dom，假如说是一个组件，也是一样的 只不过将diaplay：none样式去掉了，并不会说重新渲染，执行生命周期之类的</li>
-<li>如果是v-if的话，假如说 <div v-else></div> 是一个组件，那么就会重新走整个生命周期，比如说created，mounted之类的生命周期都会走一遍， 比如说你在mounted里面声明了 getData方法，去获取数据，这里是会调用的</li>
-<li>总结来说，就是v-if最终浏览器的dom上，是不会出现为false的节点的，但是v-show会出现，只不过会加一个 display:none 的样式；这也是为什么v-if会重新走组件的生命周期，因为是需要重新生成的；</li>
-</ol>
-</li>
-</ol>
+    <h1 id="vue的编译时和运行时是什么意思？"><a href="#vue的编译时和运行时是什么意思？" class="headerlink" title="vue的编译时和运行时是什么意思？"></a>vue的编译时和运行时是什么意思？</h1><p>编译时，是指将vue的template编译为render函数的过程，是通过vue-template-compire依赖，将vue文件中的template编译为render函数</p>
+<p>运行时，是不需要提供模版，直接手写render，所以不需要vue-template-compire依赖参与，不需要进行编译;</p>
 
   </div>
   
     
-      <a id="older" class="blog-nav" href="/2025/06/11/hello-world/">OLDER&nbsp;&gt;</a>
+      <a id="older" class="blog-nav" href="/2025/06/11/render%20%E5%87%BD%E6%95%B0%E6%80%8E%E4%B9%88%E6%9D%A5%E7%9A%84/">OLDER&nbsp;&gt;</a>
       
         
-          <a id="newer" class="blog-nav" href="/2025/06/11/post2/">&lt;&nbsp;NEWER</a>
-          
             
 </div>
         <div class="footer">
